@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuarios</title>
+    <link rel="stylesheet" href="/style-lista.css">
+</head>
+<body>
+    <h1>Lista de Usuarios Registrados</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre de Usuario</th>
+                <th>Correo Electrónico</th>
+            </tr>
+        </thead>
+        <tbody id="usuarios-lista"></tbody>
+    </table>
+
+    <script>
+        async function cargarUsuarios() {
+            try {
+                const response = await fetch("/api/usuarios"); // ✅ Ruta correcta de la API
+                const usuarios = await response.json();
+                const tabla = document.getElementById("usuarios-lista");
+                
+                // ✅ Limpiar la tabla antes de agregar datos
+                tabla.innerHTML = "";
+                
+                if (usuarios.length === 0) {
+                    tabla.innerHTML = "<tr><td colspan='3'>No hay usuarios registrados.</td></tr>";
+                    return;
+                }
+                
+                usuarios.forEach(user => {
+                    let fila = `<tr>
+                        <td>${user.id}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                    </tr>`;
+                    tabla.innerHTML += fila;
+                });
+            } catch (error) {
+                console.error("Error al cargar usuarios:", error);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", cargarUsuarios);
+    </script>
+</body>
+</html>
